@@ -1,6 +1,5 @@
 package br.com.walm.service;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import br.com.walm.dto.Trajeto;
@@ -13,7 +12,7 @@ public interface TrajetoService {
 	
 	String retornarNomesRota(List<MalhaLogistica> malhas);
 	
-	Trajeto preencherTrajeto(Rota rota, BigDecimal autonomia, BigDecimal valorLitro);
+	Trajeto preencherTrajeto(Rota rota, Trajeto pesquisa);
 	
 
 }

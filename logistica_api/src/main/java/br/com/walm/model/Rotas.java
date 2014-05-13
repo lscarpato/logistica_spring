@@ -54,7 +54,7 @@ public class Rotas {
         
 		Set<Rota> rotasBaseIgual = new HashSet<>();
 		//vai ter q iterar nas rotas e nas malhas
-		Iterator<Rota> iterator = rotas.iterator();
+		/*Iterator<Rota> iterator = rotas.iterator();*/
 		
 		Set<Rota> rotasParaSeremExcluidas = new TreeSet<>();
 		

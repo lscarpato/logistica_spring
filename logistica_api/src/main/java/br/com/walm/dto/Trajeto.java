@@ -6,7 +6,6 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class Trajeto {
 
-	private String nome;
 	private String pontoOrigem;
 	private String pontoDestino;
 	private BigDecimal autonomia;
@@ -15,12 +14,6 @@ public class Trajeto {
 	private String rotaFinal;
 	private BigDecimal custoTrajeto;
 	
-	public String getNome() {
-		return nome;
-	}
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
 	public String getPontoOrigem() {
 		return pontoOrigem;
 	}

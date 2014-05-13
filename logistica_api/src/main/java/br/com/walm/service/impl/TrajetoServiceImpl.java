@@ -49,7 +49,7 @@ public class TrajetoServiceImpl implements TrajetoService{
 			rotas.adicionarMalhas(malhas);
 		}
 		
-		return  preencherTrajeto(rotas.getMelhorRota(), pesquisa.getAutonomia(), pesquisa.getValorLitro());
+		return  preencherTrajeto(rotas.getMelhorRota(), pesquisa);
 	}
 	
 	@Override
@@ -72,11 +72,16 @@ public class TrajetoServiceImpl implements TrajetoService{
 	}
 	
 	@Override
-	public Trajeto preencherTrajeto(Rota rota, BigDecimal autonomia, BigDecimal valorLitro){
+	public Trajeto preencherTrajeto(Rota rota, Trajeto pesquisa){
 		if(rota != null && rota.getMalhas() != null){
 		Trajeto melhorTrajeto = new Trajeto();
+		melhorTrajeto.setPontoDestino(pesquisa.getPontoDestino());
+		melhorTrajeto.setPontoOrigem(pesquisa.getPontoOrigem());
+		melhorTrajeto.setAutonomia(pesquisa.getAutonomia());
+		melhorTrajeto.setValorLitro(pesquisa.getValorLitro());
+		melhorTrajeto.setDistancia(rota.getDistancia());;
 		melhorTrajeto.setRotaFinal(retornarNomesRota(rota.getMalhas()));
-		melhorTrajeto.setCustoTrajeto((rota.getDistancia().divide(autonomia,MathContext.DECIMAL128).setScale(2, RoundingMode.HALF_EVEN)).multiply(valorLitro));
+		melhorTrajeto.setCustoTrajeto((rota.getDistancia().divide(pesquisa.getAutonomia(),MathContext.DECIMAL128).setScale(2, RoundingMode.HALF_EVEN)).multiply(pesquisa.getValorLitro()));
 		return melhorTrajeto;
 		}
 		return null;
