@@ -1,1 +1,4 @@
-/logistica_api
+target/
+.classpath
+.project
+.settings
