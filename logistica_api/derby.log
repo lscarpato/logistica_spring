@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
-2014-05-08 23:03:44.161 GMT:
- Booting Derby version The Apache Software Foundation - Apache Derby - 10.4.2.0 - (689064): instance a816c00e-0145-de13-ff25-0000094a7f90
-on database directory /home/janes/git/logistica_spring/logistica-api/derbydb2  
+2014-05-14 02:43:01.428 GMT:
+ Booting Derby version The Apache Software Foundation - Apache Derby - 10.4.2.0 - (689064): instance a816c00e-0145-f89c-8eed-000009e304e0
+on database directory /home/janes/git/local_logistica_spring/logistica_api/derbydb2  
 
 Database Class Loader started - derby.database.classpath=''

@@ -1,10 +1,11 @@
 package br.com.walm.service.impl;
 
-import static br.com.walm.model.MalhasDataBuilder.createMalhasPontoOrigemA;
-import static org.junit.Assert.*;
+import static br.com.walm.model.MalhasDataBuilder.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -20,7 +21,6 @@ import org.mockito.stubbing.Answer;
 
 import br.com.walm.dto.Trajeto;
 import br.com.walm.model.MalhaLogistica;
-import br.com.walm.model.MalhasDataBuilder;
 import br.com.walm.service.MalhaLogisticaService;
 @RunWith(MockitoJUnitRunner.class)
 public class MalhaLogisticaImplTest {
@@ -36,7 +36,7 @@ public class MalhaLogisticaImplTest {
 		when(service.findByPontoOrigem("A")).thenReturn(createMalhasPontoOrigemA());
 		when(service.findMalhasByPontosOrigem(new HashSet<>(Arrays.asList("B","C")))).thenAnswer(new Answer<Map<String, List<MalhaLogistica>>>() {
 			  public Map<String, List<MalhaLogistica>> answer(InvocationOnMock invocation) throws Throwable {
-				    return MalhasDataBuilder.createMalhasPontoOrigemB_C();
+				    return createMalhasPontoOrigemB_C();
 				  }
 				});
 				
@@ -48,5 +48,64 @@ public class MalhaLogisticaImplTest {
 		Trajeto trajeto = trajetoService.buscarMelhor(trajetoPesquisa);
 		
 		assertEquals("A_B_D", trajeto.getRotaFinal());
+	}
+	
+	@Test
+	public void testRotaDiretaSorocaba_SaoPaulo() {
+		when(service.findByPontoOrigem("SOROCABA")).thenReturn(createMalhasPontoOrigemSorocaba());
+		when(service.findMalhasByPontosOrigem(new HashSet<>(Arrays.asList("SÃO PAULO","RIBEIRÃO PRETO")))).thenAnswer(new Answer<Map<String, List<MalhaLogistica>>>() {
+			  public Map<String, List<MalhaLogistica>> answer(InvocationOnMock invocation) throws Throwable {
+				    return createMalhasPontoOrigemSaoPaulo_RibeiraoPreto();
+				  }
+				});
+				
+		Trajeto trajetoPesquisa = new Trajeto();
+		trajetoPesquisa.setPontoOrigem("SOROCABA");
+		trajetoPesquisa.setPontoDestino("SÃO PAULO");
+		trajetoPesquisa.setAutonomia(BigDecimal.TEN);
+		trajetoPesquisa.setValorLitro(new BigDecimal(2.5));
+		Trajeto trajeto = trajetoService.buscarMelhor(trajetoPesquisa);
+		
+		assertEquals("SOROCABA_SÃO PAULO", trajeto.getRotaFinal());
+	}
+	
+	@Test
+	public void testCustoSorocaba_SaoPaulo() {
+		when(service.findByPontoOrigem("SOROCABA")).thenReturn(createMalhasPontoOrigemSorocaba());
+		when(service.findMalhasByPontosOrigem(new HashSet<>(Arrays.asList("SÃO PAULO","RIBEIRÃO PRETO")))).thenAnswer(new Answer<Map<String, List<MalhaLogistica>>>() {
+			  public Map<String, List<MalhaLogistica>> answer(InvocationOnMock invocation) throws Throwable {
+				    return createMalhasPontoOrigemSaoPaulo_RibeiraoPreto();
+				  }
+				});
+				
+		Trajeto trajetoPesquisa = new Trajeto();
+		trajetoPesquisa.setPontoOrigem("SOROCABA");
+		trajetoPesquisa.setPontoDestino("SÃO PAULO");
+		trajetoPesquisa.setAutonomia(BigDecimal.TEN);
+		trajetoPesquisa.setValorLitro(new BigDecimal(2.5));
+		Trajeto trajeto = trajetoService.buscarMelhor(trajetoPesquisa);
+		
+		if(trajeto != null && trajeto.getRotaFinal() != null){
+			assertEquals(new BigDecimal(21.75), trajeto.getCustoTrajeto().setScale(2, RoundingMode.HALF_EVEN));
+		}
+	}
+	
+	@Test
+	public void testRotaSaoPaulo_SaoJoseDosCampos() {
+		when(service.findByPontoOrigem("SÃO PAULO")).thenReturn(createMalhasPontoOrigemSaoPaulo());
+		when(service.findMalhasByPontosOrigem(new HashSet<>(Arrays.asList("ARUJÁ","JACAREÍ","SANTA ISABEL","MOGI DAS CRUZES")))).thenAnswer(new Answer<Map<String, List<MalhaLogistica>>>() {
+			  public Map<String, List<MalhaLogistica>> answer(InvocationOnMock invocation) throws Throwable {
+				    return createMalhasPontoOrigemSantaIsabel_MogiDasCruzes();
+				  }
+				});
+				
+		Trajeto trajetoPesquisa = new Trajeto();
+		trajetoPesquisa.setPontoOrigem("SÃO PAULO");
+		trajetoPesquisa.setPontoDestino("S. JOSÉ DOS CAMPOS");
+		trajetoPesquisa.setAutonomia(BigDecimal.TEN);
+		trajetoPesquisa.setValorLitro(new BigDecimal(2.5));
+		Trajeto trajeto = trajetoService.buscarMelhor(trajetoPesquisa);
+		
+		assertEquals("SÃO PAULO_ARUJÁ_JACAREÍ_S. JOSÉ DOS CAMPOS", trajeto.getRotaFinal());
 	}
 }

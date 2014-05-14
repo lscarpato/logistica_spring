@@ -54,6 +54,7 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
 	</bean>
 
 	<jdbc:initialize-database data-source="dataSource">
+		<!-- <jdbc:script location="classpath:malha_logistica_walm.sql"  /> -->
 		<jdbc:script location="classpath:malha_logistica_walm.sql"  />
 	</jdbc:initialize-database>
 

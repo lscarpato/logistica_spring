@@ -35,6 +35,7 @@ public class TrajetoServiceImplTest {
 		}
 	}
 	
+	
 	@Test
 	public void recuperarMalhaLogisticaComMelhorCustoTeste() {
 		

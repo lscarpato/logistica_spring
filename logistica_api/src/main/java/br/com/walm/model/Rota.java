@@ -62,9 +62,12 @@ public class Rota implements Comparable<Rota>{
 	public void cancelarRota() {
 		cancelada = true;
 	}
+	public void concluirRota() {
+		concluida = true;
+	}
 
 	public boolean permiteAdicionarMalhas() {
-		if(this.getLastPontoDestino() != this.pontoDestino && !this.isConcluida() && !this.isErroRota()){
+		if(this.getLastPontoDestino() != this.pontoDestino && !this.isCancelada() && !this.isConcluida() && !this.isErroRota()){
 			return true;
 		}
 		return false;
@@ -92,6 +95,10 @@ public class Rota implements Comparable<Rota>{
 
 	public boolean isCancelada() {
 		return cancelada;
+	}
+
+	public String getPontoDestino() {
+		return pontoDestino;
 	}
 
 }

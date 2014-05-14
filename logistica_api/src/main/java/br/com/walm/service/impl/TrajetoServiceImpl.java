@@ -1,13 +1,16 @@
 package br.com.walm.service.impl;
 
-import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import br.com.walm.dto.Trajeto;
 import br.com.walm.model.MalhaLogistica;
@@ -28,28 +31,13 @@ public class TrajetoServiceImpl implements TrajetoService{
 	
 	@Override
 	public Trajeto buscarMelhor(Trajeto pesquisa) {
-		
-		// busca pontosOrigem  igual ao da pesquisa
-		List<MalhaLogistica> pontosOrigem = malhaLogisticaService.findByPontoOrigem(pesquisa.getPontoOrigem());
-		
-		Rotas rotas = new Rotas(pesquisa.getPontoOrigem(), pesquisa.getPontoDestino());
-		
-		//Varre cada pontoOrigem encontrado
-		for (MalhaLogistica malhaLogistica : pontosOrigem) {
-			Rota rota = new Rota(pesquisa.getPontoOrigem(), pesquisa.getPontoDestino());
-			
-			//Se rota nao concluida adiona a primeira MalhaLogistica
-			rota.addMalhaLogistica(malhaLogistica);
-			rotas.addRota(rota);
+		Rotas rotas = criarNovasRotas(pesquisa);
+		rotas = addMalhas(pesquisa, rotas);
+		if(rotas.getMelhorRota() != null && rotas.getMelhorRota().getLastPontoDestino() != null &&rotas.getMelhorRota().getLastPontoDestino().equalsIgnoreCase(pesquisa.getPontoDestino())){
+			return  preencherTrajeto(rotas.getMelhorRota(), pesquisa);
 		}
+		return null;
 		
-		while(!rotas.encontrouMelhorRota()){
-			//busca malhas pelo ultimo destino da malha anterior
-			Map<String, List<MalhaLogistica>> malhas  = malhaLogisticaService.findMalhasByPontosOrigem(rotas.montarPesquisa());
-			rotas.adicionarMalhas(malhas);
-		}
-		
-		return  preencherTrajeto(rotas.getMelhorRota(), pesquisa);
 	}
 	
 	@Override
@@ -87,5 +75,42 @@ public class TrajetoServiceImpl implements TrajetoService{
 		return null;
 	}
 	
-	
+	@Override
+	public Rotas addMalhas(Trajeto pesquisa, Rotas rotas ){
+		while(!rotas.encontrouMelhorRota()){
+			Map<String, List<MalhaLogistica>> malhas  = malhaLogisticaService.findMalhasByPontosOrigem(rotas.montarPesquisa());
+			
+			/*if(CollectionUtils.isEmpty(malhasEncontradas) && !rota.getLastPontoDestino().equalsIgnoreCase(rota.getPontoDestino())){
+				rota.cancelarRota();
+			}*/
+			rotas = rotas.adicionarMalhas(rotas, malhas);
+		}
+		
+		return rotas;
+	}
+		
+	@Override
+	public Rotas criarNovasRotas(Trajeto pesquisa ){
+		// busca pontosOrigem  igual ao da pesquisa
+				List<MalhaLogistica> pontosOrigem = malhaLogisticaService.findByPontoOrigem(pesquisa.getPontoOrigem());
+		Rotas rotas = new Rotas(pesquisa.getPontoOrigem(), pesquisa.getPontoDestino());
+		//Varre cada pontoOrigem encontrado
+				for (MalhaLogistica malhaLogistica : pontosOrigem) {
+					Rota rota = new Rota(pesquisa.getPontoOrigem(), pesquisa.getPontoDestino());
+					//Adiciona a primeira MalhaLogistica
+					rota.addMalhaLogistica(malhaLogistica);
+					rotas.addRota(rota);
+				}
+		return rotas;
+	}
+	@Override
+	public Map<String, List<MalhaLogistica>>  buscarNovasMalhas(Rota rota ){
+		Map<String, List<MalhaLogistica>> malhasPorOrigem = new HashMap<>();
+		List<MalhaLogistica> malhas = new ArrayList<MalhaLogistica>();
+			malhas = malhaLogisticaService.findByPontoOrigem(rota.getLastPontoDestino());
+		if(!CollectionUtils.isEmpty(malhas)){
+			malhasPorOrigem.put(rota.getLastPontoDestino(), malhas);
+		}
+		return malhasPorOrigem;
+	}
 }
