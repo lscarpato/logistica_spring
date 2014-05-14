@@ -26,14 +26,14 @@ Corpo da request no formato json, conforme exemplo abaixo:
 
 ```{"nome":"rota 1", "pontoOrigem":"A","pontoDestino":"B", "distancia":10 }```
 
-#### Para buscar uma malha logística:
+#### Para buscar determinada malha logística:
  
 * http://localhost:8080/logistica-api/malhas/{id}
 
-#### Para deletar uma malha logística, enviar a requisição como DELETE: 
+#### Para deletar malha logística, enviar a requisição como DELETE: 
  
 * http://localhost:8080/logistica-api/malhas/{id}
   
-#### Para buscar a melhor rota logística:
+#### Para buscar melhor rota logística:
  
 * http://localhost:8080/logistica-api/trajetos?origem={origem}&destino={destino}&autonomia={autonomia}&valorLitro={valorLitro}
