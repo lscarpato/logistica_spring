@@ -26,7 +26,7 @@ Corpo da request no formato json, conforme exemplo abaixo:
 
 ```{"nome":"rota 1", "pontoOrigem":"A","pontoDestino":"B", "distancia":10 }```
 
-#### Para buscar determinada malha logística:
+#### Para buscar malha logística:
  
 * http://localhost:8080/logistica-api/malhas/{id}
 
